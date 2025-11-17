@@ -1,0 +1,33 @@
+name: CI/CD
+on:
+    pull_request:
+        types: [synchronize] # Only runs on new commits after PR is opened
+    pull_request_review:
+        types: [submitted] # Runs when approval is given
+
+jobs:
+    check-approval:
+        runs-on: ubuntu-latest
+        outputs:
+            approved: ${{ steps.check.outputs.approved }}
+        steps:
+            - name: Check for nagarajpatil approval
+              id: check
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  PR_NUMBER: ${{ github.event.pull_request.number }}
+                  REPO: ${{ github.repository }}
+              run: |
+                  APPROVED=$(gh pr view $PR_NUMBER --repo $REPO --json reviews --jq '.reviews | any(.author.login == "nagarajpatil" and .state == "APPROVED")')
+                  echo "approved=$APPROVED" >> $GITHUB_OUTPUT
+                  if [ "$APPROVED" != "true" ]; then
+                    echo "❌ PR requires approval from nagarajpatil before CI/CD can run"
+                    exit 1
+                  fi
+
+    ci:
+        needs: check-approval
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            # your build/test steps here
