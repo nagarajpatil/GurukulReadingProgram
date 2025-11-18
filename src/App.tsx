@@ -71,7 +71,7 @@ function App() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Student Reading Progress Viewer
+              Gurukul Reading Program
             </h1>
             <p className="text-sm text-muted-foreground">
               View student reading conversations and progress from SharePoint
@@ -88,7 +88,6 @@ function App() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Reading Progress Data</CardTitle>
-                <Badge variant="outline">Live from SharePoint</Badge>
               </div>
             </CardHeader>
             <CardContent>
